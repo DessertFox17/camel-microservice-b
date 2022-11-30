@@ -1,16 +1,17 @@
 package com.jblackheart.microservices.camelmicroserviceb.processor;
 
 import com.jblackheart.microservices.camelmicroserviceb.domain.dto.CurrencyExchange;
+import com.jblackheart.microservices.camelmicroserviceb.util.IntegrationLogger;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
-import java.math.BigDecimal;
-
+@Component
 public class CurrencyExchangeProcessor implements Processor {
 
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    @Autowired
+    private IntegrationLogger logger;
 
     @Override
     public void process(Exchange exchange) throws Exception {
@@ -19,6 +20,12 @@ public class CurrencyExchangeProcessor implements Processor {
     }
 
     private Double calculateCurrencyConversion(CurrencyExchange currencyExchange) {
-        return currencyExchange.getId() * currencyExchange.getConversionMultiple();
+        double result = 0;
+        try {
+            result = currencyExchange.getId() * currencyExchange.getConversionMultiple();
+        } catch (Exception ex) {
+            logger.error("Something went wrong while calculating currency ", ex, this.getClass().getName());
+        }
+        return result;
     }
 }
