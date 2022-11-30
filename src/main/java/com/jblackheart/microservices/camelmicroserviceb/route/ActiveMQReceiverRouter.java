@@ -9,7 +9,6 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class ActiveMQReceiverRouter extends RouteBuilder {
-
     @Autowired
     private CurrencyExchangeProcessor currencyProcessor;
 
@@ -17,8 +16,7 @@ public class ActiveMQReceiverRouter extends RouteBuilder {
     public void configure() throws Exception {
         from("activemq:my-activemq-queue")
                 .unmarshal().json(JsonLibrary.Jackson, CurrencyExchange.class)
-                .bean(currencyProcessor)
+                .process(currencyProcessor)
                 .to("log:received-message-from-active-mq");
-
     }
 }

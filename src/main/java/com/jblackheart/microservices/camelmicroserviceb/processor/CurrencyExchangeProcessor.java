@@ -24,7 +24,7 @@ public class CurrencyExchangeProcessor implements Processor {
         try {
             result = currencyExchange.getId() * currencyExchange.getConversionMultiple();
         } catch (Exception ex) {
-            logger.error(ex.getMessage(), ex, this.getClass());
+            logger.error("Something went wrong while calculating currency ", ex, this.getClass().getName());
         }
         return result;
     }
